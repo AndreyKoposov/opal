@@ -7,11 +7,28 @@ services:
       - ./uploads:/app/uploads 
     networks:
       - app_network
+    env_file:
+      - ./.env
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PSWRD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - opal_pg:/var/lib/postgresql/data
+    networks:
+      - app_network
+    env_file:
+      - ./.env
 
 volumes:
-  opal_v:
+  opal_pg:
     name: 
-      opal_v
+      opal_pg
 
 networks:
   app_network:

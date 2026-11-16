@@ -1,7 +1,4 @@
 from os import getenv
-# from dotenv import load_dotenv
-
-# load_dotenv()
 
 AI_ENGINE = getenv('AI_ENGINE', default='')
 AI_MODEL = getenv('AI_MODEL', '')
