@@ -1,0 +1,18 @@
+services:
+  opal:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads 
+    networks:
+      - app_network
+
+volumes:
+  opal_v:
+    name: 
+      opal_v
+
+networks:
+  app_network:
+    driver: bridge

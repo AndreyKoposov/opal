@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f2f5;
+        }
+        .login-box {
+            background: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 360px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #1a1a2e;
+        }
+        label {
+            display: block;
+            font-size: 0.875rem;
+            margin-bottom: 0.4rem;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: #4a6cf7;
+        }
+        button {
+            width: 100%;
+            margin-top: 1.25rem;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background: #4a6cf7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #3b5bdb;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>Вход</h1>
+        <form id="loginForm">
+            <label for="userId">ID пользователя</label>
+            <input type="text" id="userId" name="id" placeholder="Введите ID" required autocomplete="off">
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const id = document.getElementById('userId').value.trim();
+            if (!id) return;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Ошибка входа: ' + (data.message || 'неизвестная ошибка'));
+                }
+            } catch (error) {
+                console.error('Ошибка сети:', error);
+                alert('Не удалось связаться с сервером');
+            }
+        });
+    </script>
+</body>
+</html>
