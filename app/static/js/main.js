@@ -1,3 +1,6 @@
+// Selected proc
+var selected = -1;
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Переключение вкладок в центральной колонке ---
     const menuButtons = document.querySelectorAll('.menu-btn');

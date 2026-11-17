@@ -7,6 +7,7 @@
     <title>Lab</title>
     <link rel="stylesheet" href="/static/css/main.css">
     <link rel="stylesheet" href="/static/css/list.css">
+    <link rel="stylesheet" href="/static/css/chat.css">
 </head>
 <body>
     <div class="layout" id="layout">
@@ -54,13 +55,49 @@
         <!-- Правая колонка -->
         <aside class="column column-right" id="rightColumn">
             <button class="toggle-btn" id="toggleRight" title="Скрыть правую колонку">▶</button>
-            <div class="column-content">
-                <h2>Правая</h2>
-                <p>Широкая колонка.</p>
+            <div class="column-content chat-wrapper">
+                <h2 class="chat-title">Чат с ИИ</h2>
+            
+                <!-- Лента сообщений -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="msg msg-ai">
+                        <div class="msg-bubble">Здравствуйте! Чем могу помочь?</div>
+                    </div>
+                </div>
+            
+                <!-- Поле ввода -->
+                <div class="chat-input-row">
+                    <textarea id="chatInput" rows="2" placeholder="Введите сообщение..."></textarea>
+                    <button class="send-btn" id="sendBtn" title="Отправить">➤</button>
+                </div>
+            
+                <!-- Панель кнопок под вводом -->
+                <div class="chat-toolbar">
+                    <button class="tool-btn attach-btn" id="attachBtn" title="Прикрепить PDF">
+                        📎 PDF
+                    </button>
+                    <input type="file" id="pdfInput" accept="application/pdf" hidden>
+                
+                    <div class="toggle-group" role="group">
+                        <button class="toggle-btn-mode active" data-mode="normal" title="Обычный режим">
+                            Обычный
+                        </button>
+                        <button class="toggle-btn-mode" data-mode="document" title="Режим документа">
+                            Документ
+                        </button>
+                        <button class="toggle-btn-mode" data-mode="sparql" title="Режим SPARQL-запроса">
+                            SPARQL
+                        </button>
+                    </div>
+                </div>
+            
+                <!-- Список прикреплённых файлов -->
+                <ul class="attached-list" id="attachedList"></ul>
             </div>
         </aside>
     </div>
 
+    <script src="/static/js/chat.js"></script>
     <script src="/static/js/list.js"></script>
     <script src="/static/js/main.js"></script>
 </body>

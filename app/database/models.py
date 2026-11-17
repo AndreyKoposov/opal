@@ -13,3 +13,10 @@ class Process(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
+
+class Message(Base):
+    __tablename__ = "messages"
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(String)
+    pid = Column(Integer, ForeignKey('processes.id', ondelete='CASCADE'))
+    sender = Column(String)

@@ -164,20 +164,22 @@ async function initList() {
         if (!item) return;
 
         console.log('Выбран элемент:', item);
+        selected = id;
+        initChat();
 
         // Отправка на сервер информации о нажатии
-        fetch('/api/items/select', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: item.id,
-                name: item.name,
-                clicked_at: new Date().toISOString(),
-            }),
-        })
-        .then(response => response.json())
-        .then(data => console.log('Ответ сервера:', data))
-        .catch(error => console.error('Ошибка отправки:', error));
+        // fetch('/api/items/select', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({
+        //         id: item.id,
+        //         name: item.name,
+        //         clicked_at: new Date().toISOString(),
+        //     }),
+        // })
+        // .then(response => response.json())
+        // .then(data => console.log('Ответ сервера:', data))
+        // .catch(error => console.error('Ошибка отправки:', error));
     }
 
     renderItems();

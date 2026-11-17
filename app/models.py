@@ -19,3 +19,12 @@ class ProcessResponse(BaseModel):
 
 class ProcessIDResponse(BaseModel):
     pid: int
+
+class MessageRequest(BaseModel):
+    content: str
+    pid: int
+    mode: str
+    sender: str
+
+class MessageResponse(BaseModel):
+    msgs: list
