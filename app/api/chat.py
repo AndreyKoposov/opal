@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import MessageRequest, MessageResponse
 from app.database.engine import get_db
 from app.controllers.messages import MessageController
+from app.ai.engine import engine
 
 router = APIRouter()
 
@@ -33,3 +34,6 @@ async def get_new(pid: int, after: int, db: AsyncSession = Depends(get_db)):
 @router.post("/create/")
 async def create(msg: MessageRequest, db: AsyncSession = Depends(get_db)):
     await MessageController.create(db, content=msg.content, sender=msg.sender, process=msg.pid)
+    if msg.mode == 'normal':
+        response = await engine.chat(msg.content)
+        await MessageController.create(db, content=response, sender='ai', process=msg.pid)

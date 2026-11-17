@@ -122,7 +122,7 @@ async function initList() {
             body: JSON.stringify({ id: -1, name: newItem.name, user: parseInt(user_id.value) }),
         });
         let json = await response.json();
-        newItem.id = json.id;
+        newItem.id = json.pid;
     });
 
     // Редактирование

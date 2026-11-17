@@ -1,4 +1,4 @@
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import Message
@@ -7,7 +7,7 @@ from app.database.models import Message
 class MessageController:
     # ---------- READ (list) ----------
     @staticmethod
-    async def list(db: AsyncSession, process: int, 
+    async def list(db: AsyncSession, process: int,
                    offset: int = 0, limit: int = 100) -> list[Message]:
         result = await db.execute(
             select(Message).where(Message.pid==process).order_by(Message.id)

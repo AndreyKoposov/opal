@@ -1,0 +1,22 @@
+from gigachat import GigaChat
+
+from . import engine
+
+
+class GigaChatEngine(engine.AIEngine):
+    def __init__(self, key: str, model: str, temp: float) -> None:
+        super().__init__(1)
+
+        self.giga = GigaChat(
+            credentials=key,
+            model=model,
+            verify_ssl_certs=False,
+            temperature=temp,
+            scope="GIGACHAT_API_PERS",
+            timeout=30,
+        )
+
+    @engine.AIEngine.with_semaphore
+    async def chat(self, query: str) -> str:
+        response = await self.giga.achat(query)
+        return response.choices[0].message.content

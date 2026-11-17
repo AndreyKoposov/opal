@@ -66,9 +66,11 @@ function initChat() {
     // --- Опрос новых сообщений ---
     async function pollNewMessages() {
         try {
-            const url = lastMessageId
-                ? `/chat/new/${selected}/${lastMessageId}`
-                : `/chat/msgs/${selected}`;
+            // const url = lastMessageId
+            //     ? `/chat/new/${selected}/${lastMessageId}`
+            //     : `/chat/msgs/${selected}`;
+
+            const url = `/chat/msgs/${selected}`;
 
             const response = await fetch(url);
             if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -82,7 +84,7 @@ function initChat() {
             const wasAtBottom =
                 chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < 40;
 
-            //clearChat();
+            clearChat();
             messages.forEach(msg => renderMessage(msg));
 
             // Прокручиваем вниз, только если пользователь уже был внизу
