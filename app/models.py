@@ -8,3 +8,14 @@ class LoginResponse(BaseModel):
     success: bool
     redirect_url: str
     message: str
+
+class ProcessRequest(BaseModel):
+    id: int
+    name: str
+    user: int
+
+class ProcessResponse(BaseModel):
+    processes: list
+
+class ProcessIDResponse(BaseModel):
+    pid: int

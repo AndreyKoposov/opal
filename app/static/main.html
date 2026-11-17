@@ -6,15 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab</title>
     <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/list.css">
 </head>
 <body>
     <div class="layout" id="layout">
-        <!-- Левая узкая колонка -->
+        <!-- Левая колонка -->
         <aside class="column column-left" id="leftColumn">
             <button class="toggle-btn" id="toggleLeft" title="Скрыть левую колонку">◀</button>
             <div class="column-content">
-                <h2>Левая</h2>
-                <p>Узкая колонка.</p>
+                <div class="left-header">
+                    <h2>Элементы</h2>
+                    <button class="add-btn" id="addItem" title="Добавить элемент">+</button>
+                </div>
+                <ul class="item-list" id="itemList"></ul>
             </div>
         </aside>
 
@@ -57,6 +61,7 @@
         </aside>
     </div>
 
+    <script src="/static/js/list.js"></script>
     <script src="/static/js/main.js"></script>
 </body>
 </html>

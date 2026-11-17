@@ -36,4 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleRight.textContent = collapsed ? '◀' : '▶';
         toggleRight.title = collapsed ? 'Показать правую колонку' : 'Скрыть правую колонку';
     });
+
+    initList();
 });

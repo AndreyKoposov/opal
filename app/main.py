@@ -9,12 +9,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import LoginRequest, LoginResponse
 from app.database.engine import engine, Base, get_db
 from app.controllers.users import UserController
+from app.api.processes import router as ProcessRouter
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     print(_app.title)
     async with engine.begin() as conn:
+        # await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
     yield
     await engine.dispose()
@@ -30,6 +32,8 @@ app = FastAPI(title="Ontology Processes Analyze Lab", lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+app.include_router(ProcessRouter, prefix="/processes")
 
 @app.get("/")
 async def index():
