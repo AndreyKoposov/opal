@@ -115,45 +115,37 @@ function initChat() {
     // --- Отправка сообщения ---
     async function sendMessage() {
         const text = chatInput.value.trim();
-        if (!text) return;
+        if (!text && attachedFiles.length == 0) return;
 
         addMessage(text, 'user');
         chatInput.value = '';
         sendBtn.disabled = true;
 
-        const formData = new FormData();
-        formData.append('content', text);
-        formData.append('mode', currentMode);
-        formData.append('pid', selected);
-        formData.append('sender', 'user');
-        attachedFiles.forEach(file => formData.append('files', file));
-
         try {
-            const response = await fetch('/chat/create', {
-                method: 'POST',
-                // body: formData,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mode: currentMode, content: text, pid: selected, sender: 'user' }),
-            });
+            if (attachedFiles.length > 0) {
+                const formData = new FormData();
+                attachedFiles.forEach(file => formData.append('files', file));
 
-            if (!response.ok) throw new Error('HTTP ' + response.status);
+                const response = await fetch(`/chat/upload/${selected}`, {
+                    method: 'POST',
+                    body: formData,
+                });
+            }
+            else {
+                const response = await fetch('/chat/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mode: currentMode, content: text, pid: selected, sender: 'user' }),
+                });
 
-            clearChat();
+                if (!response.ok) throw new Error('HTTP ' + response.status);
 
-            // const raw = await response.json();
-            // const data = raw.msgs;
-
-            // // Если сервер вернул сообщение с id — учтём, чтобы опрос его не дублировал
-            // if (data.id != null) {
-            //     renderMessage({ id: data.id, reply: data.content ?? 'Пустой ответ от сервера', role: 'ai' });
-            //     scrollToBottom();
-            // } else if (data.content) {
-            //     addMessage(data.content, 'ai');
-            // }
-
-            // Сразу проверим новые сообщения (на случай, если ответ придёт асинхронно)
-            pollNewMessages();
-        } catch (error) {
+                clearChat();
+                // Сразу проверим новые сообщения (на случай, если ответ придёт асинхронно)
+                pollNewMessages();
+            } 
+        }
+        catch (error) {
             console.error('Ошибка отправки:', error);
             addMessage('Ошибка: не удалось получить ответ от сервера', 'ai');
         } finally {
