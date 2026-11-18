@@ -5,3 +5,6 @@ asyncpg
 gigachat
 openai
 python-multipart
+numpy
+pypdf
+fastembed

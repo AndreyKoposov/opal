@@ -11,8 +11,11 @@ from app.models import MessageRequest, MessageResponse, PDFResponse, PDFDelete
 from app.database.engine import get_db
 from app.controllers.messages import MessageController
 from app.ai.engine import engine
+from app.utils.rag import RAGStore
 
 router = APIRouter()
+
+rag_store: dict[int, RAGStore] = {}
 
 @router.get("/msgs/{pid}")
 async def get_list(pid: int, db: AsyncSession = Depends(get_db)):
@@ -39,8 +42,14 @@ async def get_new(pid: int, after: int, db: AsyncSession = Depends(get_db)):
 @router.post("/create/")
 async def create(msg: MessageRequest, db: AsyncSession = Depends(get_db)):
     await MessageController.create(db, content=msg.content, sender=msg.sender, process=msg.pid)
+
     if msg.mode == 'normal':
         response = await engine.chat(msg.content)
+        await MessageController.create(db, content=response, sender='ai', process=msg.pid)
+
+    if msg.mode == 'document':
+        prompt = rag_store[msg.pid].build_prompt(msg.content, top_k=4)
+        response = await engine.chat(prompt)
         await MessageController.create(db, content=response, sender='ai', process=msg.pid)
 
 @router.post("/upload/{pid}")
@@ -74,7 +83,10 @@ async def upload_pdf(pid: int, files: list[UploadFile] = File(...),
         save_path = UPLOAD_DIR / f"{pid}" / original_name
         save_path.write_bytes(content)
 
-    # 5) Ответ
+    # 5) Пересоздаем базу знаний
+    create_rag(pid)
+
+    # 6) Ответ
     content = ""
     for name in names:
         content += f"<{name}>\n"
@@ -99,3 +111,20 @@ async def get_pdf(pid: int):
 async def delete_pdf(pid: int, req: PDFDelete):
     p = UPLOAD_DIR / f"{pid}" / req.name
     p.unlink(missing_ok=True)
+
+    create_rag(pid)
+
+def create_rag(pid: int):
+    rag_store[pid] = RAGStore()
+    p = UPLOAD_DIR / f"{pid}"
+
+    if not os.path.exists(p):
+        return
+
+    for entry in p.iterdir():
+        if entry.is_file():
+            with open(entry, 'rb') as file:
+                content = file.read()
+                rag_store[pid].add_pdf(entry.name, content)
+
+    return
