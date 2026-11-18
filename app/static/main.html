@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/css/main.css">
     <link rel="stylesheet" href="/static/css/list.css">
     <link rel="stylesheet" href="/static/css/chat.css">
+    <link rel="stylesheet" href="/static/css/pdf.css">
 </head>
 <body>
     <div class="layout" id="layout">
@@ -29,7 +30,7 @@
                 <button class="menu-btn active" data-tab="tab1">Онтология</button>
                 <button class="menu-btn" data-tab="tab2">Граф</button>
                 <button class="menu-btn" data-tab="tab3">База знаний</button>
-                <button class="menu-btn" data-tab="tab4">Документы</button>
+                <button class="menu-btn" data-tab="tab-files">Файлы</button>
             </nav>
 
             <div class="content" id="content">
@@ -45,9 +46,9 @@
                     <h2>Контент вкладки 3</h2>
                     <p>Здесь будет отображаться содержимое третьей вкладки.</p>
                 </div>
-                <div class="tab-panel" id="tab4">
-                    <h2>Контент вкладки 4</h2>
-                    <p>Здесь будет отображаться содержимое четвёртой вкладки.</p>
+                <div class="tab-panel" id="tab-files">
+                    <h2>Загруженные файлы</h2>
+                    <ul class="file-list" id="fileList"></ul>
                 </div>
             </div>
         </main>

@@ -28,3 +28,9 @@ class MessageRequest(BaseModel):
 
 class MessageResponse(BaseModel):
     msgs: list
+
+class PDFResponse(BaseModel):
+    files: list
+
+class PDFDelete(BaseModel):
+    name: str

@@ -130,6 +130,8 @@ function initChat() {
                     method: 'POST',
                     body: formData,
                 });
+                attachedFiles = [];
+                renderAttached();
             }
             else {
                 const response = await fetch('/chat/create', {
@@ -152,6 +154,7 @@ function initChat() {
             sendBtn.disabled = false;
             chatInput.focus();
         }
+
     }
 
     sendBtn.addEventListener('click', sendMessage);
