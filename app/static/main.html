@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/list.css">
     <link rel="stylesheet" href="/static/css/chat.css">
     <link rel="stylesheet" href="/static/css/pdf.css">
+    <link rel="stylesheet" href="/static/css/yaml.css">
 </head>
 <body>
     <div class="layout" id="layout">
@@ -27,16 +28,30 @@
         <!-- Центральная колонка -->
         <main class="column column-center">
             <nav class="menu" id="menu">
-                <button class="menu-btn active" data-tab="tab1">Онтология</button>
+                <button class="menu-btn" data-tab="tab-yaml">YAML</button>
                 <button class="menu-btn" data-tab="tab2">Граф</button>
                 <button class="menu-btn" data-tab="tab3">База знаний</button>
                 <button class="menu-btn" data-tab="tab-files">Файлы</button>
             </nav>
 
             <div class="content" id="content">
-                <div class="tab-panel active" id="tab1">
-                    <h2>Контент вкладки 1</h2>
-                    <p>Здесь будет отображаться содержимое первой вкладки.</p>
+                <div class="tab-panel" id="tab-yaml">
+                    <h2>YAML-редактор</h2>
+
+                    <textarea
+                        id="yamlEditor"
+                        class="yaml-editor"
+                        spellcheck="false"
+                        placeholder="Вставьте или загрузите YAML-текст..."
+                    ></textarea>
+
+                    <div class="yaml-actions">
+                        <button type="button" class="yaml-btn" id="loadYamlBtn">📂 Загрузить YAML</button>
+                        <button type="button" class="yaml-btn primary" id="sendYamlBtn">➤ Отправить на сервер</button>
+                        <input type="file" id="yamlFileInput" accept=".yaml,.yml,text/yaml,application/x-yaml" hidden>
+                    </div>
+                
+                    <div class="yaml-status" id="yamlStatus"></div>
                 </div>
                 <div class="tab-panel" id="tab2">
                     <h2>Контент вкладки 2</h2>

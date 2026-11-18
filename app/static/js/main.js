@@ -1,7 +1,7 @@
 // Selected proc
 var selected = -1;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // --- Переключение вкладок в центральной колонке ---
     const menuButtons = document.querySelectorAll('.menu-btn');
     const tabPanels = document.querySelectorAll('.tab-panel');
@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // При открытии вкладки файлов — запрос на сервер
             if (targetId === 'tab-files') {
                 loadFiles();
+            }
+            if (targetId === 'tab-yaml') {
+                loadYaml();
             }
         });
     });
@@ -159,4 +162,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Экспортируем наружу, если нужно вызывать из других мест
     window.loadFiles = loadFiles;
+
+    // ============ Вкладка "YAML" ============
+    const yamlEditor = document.getElementById('yamlEditor');
+    const loadYamlBtn = document.getElementById('loadYamlBtn');
+    const sendYamlBtn = document.getElementById('sendYamlBtn');
+    const yamlFileInput = document.getElementById('yamlFileInput');
+    const yamlStatus = document.getElementById('yamlStatus');
+
+    async function loadYaml() {
+        const response = await fetch(`/ontology/yaml/${selected}`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const data = (await response.json()).text;
+        yamlEditor.value = data;
+    }
+
+    function setYamlStatus(text, type) {
+        yamlStatus.textContent = text || '';
+        yamlStatus.className = 'yaml-status' + (type ? ' ' + type : '');
+    }
+
+    // --- Загрузка YAML-файла в редактор ---
+    loadYamlBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        yamlFileInput.click();     // синхронно, в рамках user activation
+    });
+
+    yamlFileInput.addEventListener('change', async () => {
+        const file = yamlFileInput.files[0];
+        yamlFileInput.value = '';  // сброс, чтобы можно было выбрать тот же файл снова
+        if (!file) return;
+
+        try {
+            const text = await file.text();   // читаем содержимое как текст
+            yamlEditor.value = text;
+            setYamlStatus(`Загружен файл: ${file.name} (${file.size} Б)`, 'ok');
+        } catch (error) {
+            console.error('Ошибка чтения файла:', error);
+            setYamlStatus('Не удалось прочитать файл', 'err');
+        }
+    });
+
+    // --- Отправка текста на сервер ---
+    sendYamlBtn.addEventListener('click', async () => {
+        const text = yamlEditor.value.trim();
+        if (!text) {
+            setYamlStatus('Поле пустое — нечего отправлять', 'err');
+            return;
+        }
+
+        sendYamlBtn.disabled = true;
+        setYamlStatus('Отправка...');
+
+        try {
+            const response = await fetch(`/ontology/yaml/${selected}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text }),
+            });
+
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+
+            const data = await response.json().catch(() => ({}));
+            setYamlStatus(
+                'Отправлено успешно',
+                'ok'
+            );
+        } catch (error) {
+            console.error('Ошибка отправки YAML:', error);
+            setYamlStatus('Не удалось отправить на сервер', 'err');
+        } finally {
+            sendYamlBtn.disabled = false;
+        }
+    });
 });

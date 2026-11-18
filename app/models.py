@@ -34,3 +34,9 @@ class PDFResponse(BaseModel):
 
 class PDFDelete(BaseModel):
     name: str
+
+class YamlRequest(BaseModel):
+    text: str
+
+class YamlResponse(BaseModel):
+    text: str

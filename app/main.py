@@ -9,8 +9,10 @@ from app.config import STATIC_DIR, UPLOAD_DIR
 from app.models import LoginRequest, LoginResponse
 from app.database.engine import engine, Base, get_db
 from app.controllers.users import UserController
+
 from app.api.processes import router as ProcessRouter
 from app.api.chat import router as CharRouter
+from app.api.ontology import router as OntologyRouter
 
 
 @asynccontextmanager
@@ -29,6 +31,7 @@ app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 app.include_router(ProcessRouter, prefix="/processes")
 app.include_router(CharRouter, prefix="/chat")
+app.include_router(OntologyRouter, prefix="/ontology")
 
 @app.get("/")
 async def index():

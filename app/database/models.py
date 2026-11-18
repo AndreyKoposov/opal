@@ -20,3 +20,9 @@ class Message(Base):
     content = Column(String)
     pid = Column(Integer, ForeignKey('processes.id', ondelete='CASCADE'))
     sender = Column(String)
+
+class Ontology(Base):
+    __tablename__ = "ontologies"
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(String)
+    pid = Column(Integer, ForeignKey('processes.id', ondelete='CASCADE'))
