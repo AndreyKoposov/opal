@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/static/css/chat.css">
     <link rel="stylesheet" href="/static/css/pdf.css">
     <link rel="stylesheet" href="/static/css/yaml.css">
+    <link rel="stylesheet" href="/static/css/graph.css">
 </head>
 <body>
     <div class="layout" id="layout">
@@ -29,7 +30,7 @@
         <main class="column column-center">
             <nav class="menu" id="menu">
                 <button class="menu-btn" data-tab="tab-yaml">YAML</button>
-                <button class="menu-btn" data-tab="tab2">Граф</button>
+                <button class="menu-btn" data-tab="tab-graph">Граф</button>
                 <button class="menu-btn" data-tab="tab3">База знаний</button>
                 <button class="menu-btn" data-tab="tab-files">Файлы</button>
             </nav>
@@ -53,9 +54,13 @@
                 
                     <div class="yaml-status" id="yamlStatus"></div>
                 </div>
-                <div class="tab-panel" id="tab2">
-                    <h2>Контент вкладки 2</h2>
-                    <p>Здесь будет отображаться содержимое второй вкладки.</p>
+                <div class="tab-panel" id="tab-graph">
+                    <h2>Граф связей</h2>
+                    <div class="graph-toolbar">
+                        <button type="button" class="yaml-btn" id="refreshGraphBtn">↻ Обновить</button>
+                        <span class="graph-status" id="graphStatus"></span>
+                    </div>
+                    <div class="graph-container" id="graphContainer"></div>
                 </div>
                 <div class="tab-panel" id="tab3">
                     <h2>Контент вкладки 3</h2>
@@ -113,6 +118,7 @@
         </aside>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
     <script src="/static/js/chat.js"></script>
     <script src="/static/js/list.js"></script>
     <script src="/static/js/main.js"></script>

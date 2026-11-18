@@ -40,3 +40,6 @@ class YamlRequest(BaseModel):
 
 class YamlResponse(BaseModel):
     text: str
+
+class GraphResponse(BaseModel):
+    triplets: list

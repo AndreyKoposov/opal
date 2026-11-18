@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     menuButtons.forEach(btn => {
         btn.addEventListener('click', () => {
+            if (selected == -1)
+                return;
+
             const targetId = btn.dataset.tab;
 
             menuButtons.forEach(b => b.classList.remove('active'));
@@ -23,6 +26,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             if (targetId === 'tab-yaml') {
                 loadYaml();
+            }
+            if (targetId === 'tab-graph') {
+                renderGraph();
             }
         });
     });
@@ -238,5 +244,132 @@ document.addEventListener('DOMContentLoaded', async () => {
         } finally {
             sendYamlBtn.disabled = false;
         }
+    });
+
+    // ============ Вкладка "Граф" ============
+    const graphContainer = document.getElementById('graphContainer');
+    const graphStatus = document.getElementById('graphStatus');
+    const refreshGraphBtn = document.getElementById('refreshGraphBtn');
+
+    let network = null;              // экземпляр vis.Network
+    let graphLoaded = false;         // флаг: уже загружали граф
+
+    function setGraphStatus(text, isError = false) {
+        graphStatus.textContent = text || '';
+        graphStatus.className = 'graph-status' + (isError ? ' err' : '');
+    }
+
+    // Преобразование списка triplets в узлы и рёбра vis
+    function tripletsToGraph(triplets) {
+        const nodeMap = new Map();   // id -> { id, label }
+        const edges = [];
+        const edgeIds = new Set();
+
+        triplets.forEach((t, index) => {
+            const { node1, edge, node2 } = t;
+
+            if (!nodeMap.has(node1)) nodeMap.set(node1, { id: node1, label: node1 });
+            if (!nodeMap.has(node2)) nodeMap.set(node2, { id: node2, label: node2 });
+
+            // Уникальный ключ ребра: node1-edge-node2 (направленный)
+            const key = `${node1}|${edge}|${node2}`;
+            if (edgeIds.has(key)) return;
+            edgeIds.add(key);
+
+            edges.push({
+                id: index,
+                from: node1,
+                to: node2,
+                label: edge,
+                arrows: 'to',
+            });
+        });
+
+        return {
+            nodes: Array.from(nodeMap.values()),
+            edges,
+        };
+    }
+
+    function renderGraph(triplets) {
+        const { nodes, edges } = tripletsToGraph(triplets);
+
+        if (nodes.length === 0) {
+            graphContainer.innerHTML = '';
+            setGraphStatus('Граф пуст');
+            return;
+        }
+
+        // Пересоздаём контейнер — vis не любит повторную инициализацию
+        graphContainer.innerHTML = '';
+        const networkCanvas = document.createElement('div');
+        networkCanvas.style.width = '100%';
+        networkCanvas.style.height = '100%';
+        graphContainer.appendChild(networkCanvas);
+
+        const nodesDataSet = new vis.DataSet(nodes);
+        const edgesDataSet = new vis.DataSet(edges);
+
+        const options = {
+            nodes: {
+                shape: 'dot',
+                size: 18,
+                font: { size: 14, color: '#1a1a2e' },
+                color: {
+                    background: '#4a6cf7',
+                    border: '#3b5bdb',
+                    highlight: { background: '#6b87ff', border: '#3b5bdb' },
+                },
+                borderWidth: 2,
+            },
+            edges: {
+                font: { size: 12, color: '#555', align: 'middle' },
+                color: { color: '#a9b6f5', highlight: '#4a6cf7' },
+                smooth: { type: 'dynamic' },
+                width: 1.5,
+            },
+            physics: {
+                stabilization: { iterations: 200 },
+                barnesHut: { gravitationalConstant: -8000, springLength: 140 },
+            },
+            interaction: { hover: true, tooltipDelay: 150 },
+        };
+
+        network = new vis.Network(networkCanvas, { nodes: nodesDataSet, edges: edgesDataSet }, options);
+
+        setGraphStatus(`Узлов: ${nodes.length}, рёбер: ${edges.length}`);
+    }
+
+    async function loadGraph() {
+        setGraphStatus('Загрузка...');
+        graphContainer.innerHTML = '<div class="file-loading">Загрузка графа...</div>';
+
+        try {
+            const response = await fetch(`/ontology/graph/${selected}`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+            });
+
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+
+            const triplets = (await response.json()).triplets;   // [{ node1, edge, node2 }, ...]
+            renderGraph(Array.isArray(triplets) ? triplets : []);
+            graphLoaded = true;
+        } catch (error) {
+            console.error('Ошибка загрузки графа:', error);
+            graphContainer.innerHTML = '';
+            setGraphStatus('Не удалось загрузить граф', true);
+        }
+    }
+
+    refreshGraphBtn.addEventListener('click', loadGraph);
+
+    // Ленивая загрузка: при первом открытии вкладки
+    menuButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.dataset.tab === 'tab-graph' && !graphLoaded) {
+                loadGraph();
+            }
+        });
     });
 });
