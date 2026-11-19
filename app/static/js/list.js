@@ -11,17 +11,21 @@ async function initList() {
     // ];
 
     function getCookie(name) {
-        const match = document.cookie.match(
-            new RegExp('(?:^|; )' + name.replace(/([.*+?^${}()|[\]\\])/g, '\\$1') + '=([^;]*)')
-        );
-        return match ? decodeURIComponent(match[1]) : null;
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring((name + '=').length);
+            }
+        }
+        return '';
     }
 
     // Cookies
     const user_id = getCookie('user_id');
 
     // Load items
-    const response = await fetch(`/processes/list/${user_id.value}`, {method: 'GET'});
+    const response = await fetch(`/processes/list/${user_id}`, {method: 'GET'});
     let p_json = await response.json();
     let items = p_json.processes;
 
@@ -127,7 +131,7 @@ async function initList() {
         const response = await fetch('/processes/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: -1, name: newItem.name, user: parseInt(user_id.value) }),
+            body: JSON.stringify({ id: -1, name: newItem.name, user: parseInt(user_id) }),
         });
         let json = await response.json();
         newItem.id = json.pid;
