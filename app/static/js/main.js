@@ -318,13 +318,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 color: {
                     background: '#4a6cf7',
                     border: '#3b5bdb',
-                    highlight: { background: '#6b87ff', border: '#3b5bdb' },
+                    highlight: { background: '#ffb472', border: '#e79e00' },
                 },
                 borderWidth: 2,
             },
             edges: {
                 font: { size: 12, color: '#555', align: 'middle' },
-                color: { color: '#a9b6f5', highlight: '#4a6cf7' },
+                color: { color: '#a9b6f5', highlight: '#ffa84a' },
                 smooth: { type: 'dynamic' },
                 width: 1.5,
             },
