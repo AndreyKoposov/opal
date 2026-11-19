@@ -10,8 +10,15 @@ async function initList() {
     //     { id: 3, name: 'Алексей Кузнецов' },
     // ];
 
+    function getCookie(name) {
+        const match = document.cookie.match(
+            new RegExp('(?:^|; )' + name.replace(/([.*+?^${}()|[\]\\])/g, '\\$1') + '=([^;]*)')
+        );
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
     // Cookies
-    const user_id = await cookieStore.get('user_id');
+    const user_id = getCookie('user_id');
 
     // Load items
     const response = await fetch(`/processes/list/${user_id.value}`, {method: 'GET'});
@@ -114,13 +121,6 @@ async function initList() {
 
         // Cookies
         //const user_id = await cookieStore.get('user_id');
-        function getCookie(name) {
-            const match = document.cookie.match(
-                new RegExp('(?:^|; )' + name.replace(/([.*+?^${}()|[\]\\])/g, '\\$1') + '=([^;]*)')
-            );
-            return match ? decodeURIComponent(match[1]) : null;
-        }
-        
         const user_id = getCookie('user_id');
 
         // Пример отправки на сервер:
