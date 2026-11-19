@@ -1,0 +1,263 @@
+/* ============ Правая колонка: чат ============ */
+
+.chat-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.column-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.column-right .column-content.chat-wrapper {
+    flex: 1;
+    min-height: 0;
+}
+
+.chat-title {
+    font-size: 1.05rem;
+    margin-bottom: 0.75rem;
+    color: #1a1a2e;
+}
+
+/* Лента сообщений */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0.25rem;
+    min-height: 120px;
+    scroll-behavior: smooth;
+}
+
+.msg {
+    display: flex;
+}
+
+.msg-user {
+    justify-content: flex-end;
+}
+
+.msg-ai {
+    justify-content: flex-start;
+}
+
+.msg-bubble {
+    max-width: 80%;
+    padding: 0.55rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/* Пользователь — синий */
+.msg-user .msg-bubble {
+    background: #4a6cf7;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+/* ИИ — зелёный */
+.msg-ai .msg-bubble {
+    background: #d1f7dc;
+    color: #14532d;
+    border-bottom-left-radius: 4px;
+}
+
+/* Поле ввода */
+.chat-input-row {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    align-items: stretch;
+}
+
+.chat-input-row textarea {
+    flex: 1;
+    resize: none;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    border: 1px solid #d0d3e8;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.chat-input-row textarea:focus {
+    border-color: #4a6cf7;
+}
+
+.send-btn {
+    width: 40px;
+    border: none;
+    border-radius: 8px;
+    background: #4a6cf7;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.send-btn:hover {
+    background: #3b5bdb;
+}
+
+.send-btn:disabled {
+    background: #a9b6f5;
+    cursor: not-allowed;
+}
+
+/* Панель кнопок */
+.chat-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tool-btn,
+.toggle-btn-mode {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    border: 1px solid #d0d3e8;
+    border-radius: 6px;
+    background: #f7f8fc;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.tool-btn:hover,
+.toggle-btn-mode:hover {
+    background: #eef1ff;
+}
+
+/* Toggle-группа режимов */
+.toggle-group {
+    display: flex;
+    gap: 0.25rem;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.toggle-btn-mode.active {
+    background: #4a6cf7;
+    border-color: #4a6cf7;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Список прикреплённых файлов */
+.attached-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+}
+
+.attached-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    padding: 0.3rem 0.5rem;
+    background: #fff;
+    border: 1px solid #d0d3e8;
+    border-radius: 6px;
+    color: #333;
+}
+
+.attached-list li .file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attached-list li button {
+    border: none;
+    background: transparent;
+    color: #e5484d;
+    cursor: pointer;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+/* В свёрнутой правой колонке скрываем содержимое */
+.column.collapsed .chat-wrapper {
+    display: none;
+}
+
+/* Фиксируем страницу, убираем скролл body */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.layout {
+    display: flex;
+    height: 100vh;      /* вместо min-height */
+    gap: 0;
+}
+
+/* Колонки не должны растягивать страницу */
+.column {
+    position: relative;
+    padding: 0.5rem;
+    transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+    min-height: 0;      /* важно для flex-детей */
+}
+
+/* Правая колонка — flex-контейнер на всю высоту */
+.column-right {
+    display: flex;
+    flex-direction: column;
+    width: 420px;
+    flex-shrink: 0;
+    background: #e8eaf6;
+    border-left: 1px solid #d0d3e8;
+}
+
+.column-right .column-content.chat-wrapper {
+    flex: 1;
+    min-height: 0;      /* ключевой момент — иначе flex-ребёнок не сжимается */
+}
+
+.chat-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Лента сообщений — единственное место со скроллом */
+.chat-messages {
+    flex: 1;
+    min-height: 0;      /* вместо min-height: 120px */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0.25rem;
+    scroll-behavior: smooth;
+}
+
+/* Остальные блоки чата — не сжимаются */
+.chat-input-row,
+.chat-toolbar,
+.attached-list,
+.chat-title {
+    flex-shrink: 0;
+}

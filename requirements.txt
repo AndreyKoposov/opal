@@ -2,3 +2,11 @@ fastapi
 uvicorn[standard]
 sqlalchemy[asyncio]
 asyncpg
+gigachat
+openai
+python-multipart
+numpy
+pypdf
+fastembed
+rdflib
+transliterate

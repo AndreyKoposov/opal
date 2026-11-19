@@ -1,13 +1,126 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход</title>
+    <title>Lab</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/list.css">
+    <link rel="stylesheet" href="/static/css/chat.css">
+    <link rel="stylesheet" href="/static/css/pdf.css">
+    <link rel="stylesheet" href="/static/css/yaml.css">
+    <link rel="stylesheet" href="/static/css/graph.css">
 </head>
 <body>
-    <div>
-        <h1>Lab</h1>
+    <div class="layout" id="layout">
+        <!-- Левая колонка -->
+        <aside class="column column-left" id="leftColumn">
+            <button class="toggle-btn" id="toggleLeft" title="Скрыть левую колонку">◀</button>
+            <div class="column-content">
+                <div class="left-header">
+                    <h2>Элементы</h2>
+                    <button class="add-btn" id="addItem" title="Добавить элемент">+</button>
+                </div>
+                <ul class="item-list" id="itemList"></ul>
+            </div>
+        </aside>
+
+        <!-- Центральная колонка -->
+        <main class="column column-center">
+            <nav class="menu" id="menu">
+                <button class="menu-btn" data-tab="tab-yaml">YAML</button>
+                <button class="menu-btn" data-tab="tab-graph">Граф</button>
+                <button class="menu-btn" data-tab="tab3">База знаний</button>
+                <button class="menu-btn" data-tab="tab-files">Файлы</button>
+            </nav>
+
+            <div class="content" id="content">
+                <div class="tab-panel" id="tab-yaml">
+                    <h2>YAML-редактор</h2>
+
+                    <textarea
+                        id="yamlEditor"
+                        class="yaml-editor"
+                        spellcheck="false"
+                        placeholder="Вставьте или загрузите YAML-текст..."
+                    ></textarea>
+
+                    <div class="yaml-actions">
+                        <button type="button" class="yaml-btn" id="loadYamlBtn">📂 Загрузить YAML</button>
+                        <button type="button" class="yaml-btn primary" id="sendYamlBtn">➤ Отправить на сервер</button>
+                        <input type="file" id="yamlFileInput" accept=".yaml,.yml,text/yaml,application/x-yaml" hidden>
+                    </div>
+                
+                    <div class="yaml-status" id="yamlStatus"></div>
+                </div>
+                <div class="tab-panel" id="tab-graph">
+                    <h2>Граф связей</h2>
+                    <div class="graph-toolbar">
+                        <button type="button" class="yaml-btn" id="refreshGraphBtn">↻ Обновить</button>
+                        <span class="graph-status" id="graphStatus"></span>
+                    </div>
+                    <div class="graph-container" id="graphContainer"></div>
+                </div>
+                <div class="tab-panel" id="tab3">
+                    <h2>Контент вкладки 3</h2>
+                    <p>Здесь будет отображаться содержимое третьей вкладки.</p>
+                </div>
+                <div class="tab-panel" id="tab-files">
+                    <h2>Загруженные файлы</h2>
+                    <ul class="file-list" id="fileList"></ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- Правая колонка -->
+        <aside class="column column-right" id="rightColumn">
+            <button class="toggle-btn" id="toggleRight" title="Скрыть правую колонку">▶</button>
+            <div class="column-content chat-wrapper">
+                <h2 class="chat-title">Чат с ИИ</h2>
+            
+                <!-- Лента сообщений -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="msg msg-ai">
+                        <div class="msg-bubble">Здравствуйте! Чем могу помочь?</div>
+                    </div>
+                </div>
+            
+                <!-- Поле ввода -->
+                <div class="chat-input-row">
+                    <textarea id="chatInput" rows="2" placeholder="Введите сообщение..."></textarea>
+                    <button class="send-btn" id="sendBtn" title="Отправить">➤</button>
+                </div>
+            
+                <!-- Панель кнопок под вводом -->
+                <div class="chat-toolbar">
+                    <button type="button" class="tool-btn attach-btn" id="attachBtn" title="Прикрепить PDF">
+                        📎 PDF
+                    </button>
+                    <input type="file" id="pdfInput" accept="application/pdf" hidden>
+                
+                    <div class="toggle-group" role="group">
+                        <button class="toggle-btn-mode active" data-mode="normal" title="Обычный режим">
+                            Обычный
+                        </button>
+                        <button class="toggle-btn-mode" data-mode="document" title="Режим документа">
+                            Документ
+                        </button>
+                        <button class="toggle-btn-mode" data-mode="sparql" title="Режим SPARQL-запроса">
+                            SPARQL
+                        </button>
+                    </div>
+                </div>
+            
+                <!-- Список прикреплённых файлов -->
+                <ul class="attached-list" id="attachedList"></ul>
+            </div>
+        </aside>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+    <script src="/static/js/chat.js"></script>
+    <script src="/static/js/list.js"></script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html>

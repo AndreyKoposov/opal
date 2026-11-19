@@ -1,0 +1,92 @@
+/* ============ Центральная колонка: список файлов ============ */
+
+.file-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: #fff;
+    border: 1px solid #d0d3e8;
+    border-radius: 8px;
+    transition: box-shadow 0.2s;
+}
+
+.file-item:hover {
+    box-shadow: 0 2px 8px rgba(74, 108, 247, 0.12);
+}
+
+.file-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    background: #ffecec;
+    color: #e5484d;
+    border-radius: 6px;
+}
+
+.file-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-name {
+    font-size: 0.9rem;
+    color: #1a1a2e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-size {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.file-delete {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #e5484d;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.file-delete:hover {
+    background: #ffecec;
+}
+
+.file-delete:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.file-empty,
+.file-loading,
+.file-error {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: #888;
+    text-align: center;
+}
+
+.file-error {
+    color: #e5484d;
+}

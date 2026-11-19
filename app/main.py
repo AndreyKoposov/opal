@@ -1,4 +1,3 @@
-from pathlib import Path
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, Response
@@ -6,30 +5,33 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import STATIC_DIR, UPLOAD_DIR
 from app.models import LoginRequest, LoginResponse
 from app.database.engine import engine, Base, get_db
 from app.controllers.users import UserController
+
+from app.api.processes import router as ProcessRouter
+from app.api.chat import router as CharRouter
+from app.api.ontology import router as OntologyRouter
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     print(_app.title)
     async with engine.begin() as conn:
+        # await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
     yield
     await engine.dispose()
-
-BASE_DIR = Path(__file__).parent
-STATIC_DIR = BASE_DIR / "static"
-UPLOAD_DIR = BASE_DIR.parent / "uploads"
-
-MAX_FILE_SIZE = 20 * 1024 * 1024   # 20 МБ
-ALLOWED_EXTENSIONS = {".pdf"}
 
 app = FastAPI(title="Ontology Processes Analyze Lab", lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+app.include_router(ProcessRouter, prefix="/processes")
+app.include_router(CharRouter, prefix="/chat")
+app.include_router(OntologyRouter, prefix="/ontology")
 
 @app.get("/")
 async def index():

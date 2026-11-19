@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #f0f2f5;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    gap: 0;
+}
+
+/* --- Колонки --- */
+.column {
+    position: relative;
+    padding: 1.5rem;
+    transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+    min-height: 0;      /* важно для flex-детей */
+}
+
+.column-left {
+    width: 220px;
+    flex-shrink: 0;
+    background: #e8eaf6;
+    border-right: 1px solid #d0d3e8;
+}
+
+.column-center {
+    flex: 1;
+    background: #ffffff;
+}
+
+.column-right {
+    width: 420px;
+    flex-shrink: 0;
+    background: #e8eaf6;
+    border-left: 1px solid #d0d3e8;
+}
+
+/* Свёрнутое состояние */
+.column.collapsed {
+    width: 48px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.column.collapsed .column-content {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.column.collapsed .toggle-btn {
+    margin: 0 auto;
+}
+
+/* --- Кнопки сворачивания --- */
+.toggle-btn {
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #4a6cf7;
+    color: #fff;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.toggle-btn:hover {
+    background: #3b5bdb;
+}
+
+.column-right .toggle-btn {
+    margin-left: auto;
+}
+
+/* --- Меню в центре --- */
+.menu {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.menu-btn {
+    flex: 1;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.9rem;
+    border: 1px solid #d0d3e8;
+    border-radius: 8px;
+    background: #f7f8fc;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.menu-btn:hover {
+    background: #eef1ff;
+}
+
+.menu-btn.active {
+    background: #4a6cf7;
+    border-color: #4a6cf7;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* --- Контент --- */
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.tab-panel h2 {
+    margin-bottom: 0.75rem;
+    color: #1a1a2e;
+}
+
+.tab-panel p {
+    color: #555;
+    line-height: 1.5;
+}
+
+/* --- Плавное появление контента --- */
+.column-content {
+    transition: opacity 0.2s ease;
+}
