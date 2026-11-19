@@ -22,35 +22,27 @@ class RdfModel():
         parameter = self.ns.parameter
         self.g.add((parameter, RDF.type, OWL.Class))
 
+        # Понятие ресурса
+        resource = self.ns.resource
+        self.g.add((resource, RDF.type, OWL.Class))
+
         # Понятие "этап следует этапу"
         follows = self.ns.follows
         self.g.add((follows, RDF.type, RDF.Property))
         self.g.add((follows, RDFS.domain, stage))
         self.g.add((follows, RDFS.range, stage))
 
-        # # Понятие "имеет входной параметр"
-        # has_input = self.ns.hasInput
-        # self.g.add((has_input, RDF.type, RDF.Property))
-        # self.g.add((has_input, RDFS.domain, stage))
-        # self.g.add((has_input, RDFS.range, parameter))
+        # Понятие "этап использует ресурс"
+        usage = self.ns.usage
+        self.g.add((usage, RDF.type, RDF.Property))
+        self.g.add((usage, RDFS.domain, stage))
+        self.g.add((usage, RDFS.range, resource))
 
-        # # Понятие "имеет управляющий параметр"
-        # has_control = self.ns.hasControl
-        # self.g.add((has_control, RDF.type, RDF.Property))
-        # self.g.add((has_control, RDFS.domain, stage))
-        # self.g.add((has_control, RDFS.range, parameter))
-
-        # # Понятие "имеет ресурс"
-        # has_resource = self.ns.hasResource
-        # self.g.add((has_resource, RDF.type, RDF.Property))
-        # self.g.add((has_resource, RDFS.domain, stage))
-        # self.g.add((has_resource, RDFS.range, parameter))
-
-        # # Понятие "имеет выходной параметр"
-        # has_main = self.ns.hasMain
-        # self.g.add((has_main, RDF.type, RDF.Property))
-        # self.g.add((has_main, RDFS.domain, stage))
-        # self.g.add((has_main, RDFS.range, parameter))
+        # Понятие "сущность учавствует в этапе"
+        part = self.ns.part
+        self.g.add((part, RDF.type, RDF.Property))
+        self.g.add((part, RDFS.domain, entity))
+        self.g.add((part, RDFS.range, stage))
 
     def add_entities(self, entities: list[str]):
         """Добавляет сущности в модель"""
@@ -66,6 +58,13 @@ class RdfModel():
             uri = URIRef(self.ns + s)
             self.g.add((uri, RDF.type, self.ns.stage))
 
+    def add_resources(self, resources: list[str]):
+        """Добавляет ресурсы в модель"""
+        for r in resources:
+            r = self.transliterate_russian(r)
+            uri = URIRef(self.ns + r)
+            self.g.add((uri, RDF.type, self.ns.resource))
+
     def add_transitions(self, transitions: list[tuple[str, str]]):
         """Добавляет переходы между этапами в модель"""
         for stage_from, stage_to in transitions:
@@ -73,6 +72,22 @@ class RdfModel():
             stage_to = self.transliterate_russian(stage_to)
 
             self.g.add((self.ns[stage_to], self.ns.follows, self.ns[stage_from]))
+
+    def add_usages(self, usages: list[tuple[str, str]]):
+        """Добавляет использование ресуров в модель"""
+        for stage, res in usages:
+            s = self.transliterate_russian(stage)
+            r = self.transliterate_russian(res)
+
+            self.g.add((self.ns[s], self.ns.usage, self.ns[r]))
+
+    def add_parts(self, parts: list[tuple[str, str]]):
+        """Добавляет участие сущностей в модель"""
+        for entity, stage in parts:
+            e = self.transliterate_russian(entity)
+            s = self.transliterate_russian(stage)
+
+            self.g.add((self.ns[e], self.ns.part, self.ns[s]))
 
     def add_params(self, parameters: list[tuple[str, str, tuple[str, str], dict[str, str]]]):
         """Добавляет параметры в модель, формат (stage, type, paramter, unit)"""

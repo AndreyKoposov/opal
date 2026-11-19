@@ -33,11 +33,14 @@ async def send(pid: int, yaml: YamlRequest, db: AsyncSession = Depends(get_db)):
     models[pid] = RdfModel(pid)
     model = models[pid]
 
-    entities, stages, transitions = parse_yaml(parsed)
+    entities, stages, resources, transitions, usages, parts = parse_yaml(parsed)
 
     model.add_entities(entities)
     model.add_stages(stages)
+    model.add_resources(resources)
     model.add_transitions(transitions)
+    model.add_usages(usages)
+    model.add_parts(parts)
 
 @router.get("/graph/{pid}")
 async def graph(pid: int):

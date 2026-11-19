@@ -114,6 +114,7 @@ function initChat() {
 
     // --- Отправка сообщения ---
     async function sendMessage() {
+        if (selected == -1) return;
         const text = chatInput.value.trim();
         if (!text && attachedFiles.length == 0) return;
 
